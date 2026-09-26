@@ -1,0 +1,37 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Theme test</title>
+	</head>
+	<body>
+		<p>resolved: <span id="resolved"></span></p>
+		<p>preference: <span id="preference"></span></p>
+		<p>early: <span id="early"></span></p>
+		<button id="toggle">toggle</button>
+
+		<script is:inline>
+			// Parsed with the body, so this only succeeds if the integration already injected
+			// its script into the head.
+			document.getElementById('early').textContent = window.theme.get();
+		</script>
+
+		<script>
+			// A processed module script, so `astro check` type-checks the global that the
+			// integration injects.
+			const toggle = document.getElementById('toggle');
+
+			function render() {
+				document.getElementById('preference').textContent = window.theme.get();
+				document.getElementById('resolved').textContent =
+					document.documentElement.dataset.theme;
+			}
+
+			toggle.addEventListener('click', () => {
+				window.theme.set(window.theme.get() === 'dark' ? 'light' : 'dark');
+				render();
+			});
+
+			render();
+		</script>
+	</body>
+</html>

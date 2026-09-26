@@ -1,0 +1,17 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>No system test</title>
+	</head>
+	<body>
+		<p>resolved: <span id="resolved"></span></p>
+		<p>preference: <span id="preference"></span></p>
+
+		<script>
+			import { getTheme, resolvedTheme, themes } from '@astrojs/theme';
+
+			document.getElementById('preference').textContent = `${getTheme()}/${themes.join(',')}`;
+			document.getElementById('resolved').textContent = resolvedTheme();
+		</script>
+	</body>
+</html>

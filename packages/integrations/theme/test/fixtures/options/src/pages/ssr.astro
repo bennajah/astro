@@ -1,0 +1,20 @@
+---
+// Frontmatter runs on the server, where the head script has not executed.
+import { getTheme, resolvedTheme, themes } from '@astrojs/theme';
+
+const preference = getTheme();
+const resolved = resolvedTheme();
+const available = themes.join(',');
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>SSR test</title>
+	</head>
+	<body>
+		<p>preference: <span id="preference">{preference}</span></p>
+		<p>resolved: <span id="resolved">{resolved}</span></p>
+		<p>themes: <span id="themes">{available}</span></p>
+	</body>
+</html>

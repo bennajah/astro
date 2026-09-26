@@ -1,0 +1,9 @@
+{
+  "name": "@test/theme-options",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@astrojs/theme": "workspace:*",
+    "astro": "workspace:*"
+  }
+}

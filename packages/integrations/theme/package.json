@@ -1,0 +1,43 @@
+{
+  "name": "@astrojs/theme",
+  "description": "Add light, dark, and system theme support to your Astro project",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "withastro",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/withastro/astro.git",
+    "directory": "packages/integrations/theme"
+  },
+  "keywords": [
+    "astro-integration",
+    "astro-script",
+    "theme",
+    "dark-mode",
+    "color-scheme"
+  ],
+  "bugs": "https://github.com/withastro/astro/issues",
+  "homepage": "https://docs.astro.build/en/guides/integrations-guide/theme/",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "astro-scripts build \"src/**/*.ts\" && tsc -b",
+    "build:ci": "astro-scripts build \"src/**/*.ts\"",
+    "dev": "astro-scripts dev \"src/**/*.ts\"",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "astro": "workspace:*",
+    "astro-scripts": "workspace:*"
+  },
+  "publishConfig": {
+    "provenance": true
+  }
+}

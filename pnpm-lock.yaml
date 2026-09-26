@@ -6279,6 +6279,45 @@ importers:
         specifier: ^5.55.7
         version: 5.55.7
 
+  packages/integrations/theme:
+    devDependencies:
+      '@playwright/test':
+        specifier: 1.58.2
+        version: 1.58.2
+      astro:
+        specifier: workspace:*
+        version: link:../../astro
+      astro-scripts:
+        specifier: workspace:*
+        version: link:../../../scripts
+
+  packages/integrations/theme/test/fixtures/basics:
+    dependencies:
+      '@astrojs/theme':
+        specifier: workspace:*
+        version: link:../../..
+      astro:
+        specifier: workspace:*
+        version: link:../../../../../astro
+
+  packages/integrations/theme/test/fixtures/no-system:
+    dependencies:
+      '@astrojs/theme':
+        specifier: workspace:*
+        version: link:../../..
+      astro:
+        specifier: workspace:*
+        version: link:../../../../../astro
+
+  packages/integrations/theme/test/fixtures/options:
+    dependencies:
+      '@astrojs/theme':
+        specifier: workspace:*
+        version: link:../../..
+      astro:
+        specifier: workspace:*
+        version: link:../../../../../astro
+
   packages/integrations/vercel:
     dependencies:
       '@astrojs/internal-helpers':

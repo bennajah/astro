@@ -817,7 +817,10 @@ class VercelBuilder {
 }
 
 function getRuntime(process: NodeJS.Process, logger: AstroIntegrationLogger): Runtime {
-	const bunVersion = (process.versions as Record<string, string | undefined>).bun;
+	// if the user ran e.g. `bunx --bun astro build`, infer that they want to
+	// run the app in Bun
+	const bunVersion = (process.versions as NodeJS.ProcessVersions & { bun?: string })
+		.bun;
 	if (bunVersion) {
 		const [major, minor] = bunVersion.split('.');
 		const support =

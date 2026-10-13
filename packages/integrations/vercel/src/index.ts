@@ -113,6 +113,27 @@ const SUPPORTED_NODE_VERSIONS: Record<
 	},
 };
 
+// https://vercel.com/docs/functions/runtimes/bun#configuring-the-runtime
+const SUPPORTED_BUN_VERSIONS: Record<
+	string,
+	| {
+			status: 'default';
+	  }
+	| {
+			status: 'available';
+	  }
+	| {
+			status: 'deprecated';
+	  }
+> = {
+	'1.x': {
+		status: 'available',
+	},
+	'1.4.x': {
+		status: 'default',
+	},
+};
+
 function getAdapter({
 	middlewareMode,
 	skewProtection,
@@ -688,7 +709,7 @@ function isAcceptedPattern(pattern: any): pattern is RemotePattern {
 	return true;
 }
 
-type Runtime = `nodejs${string}.x`;
+type Runtime = `nodejs${string}.x` | `bun${string}.x`;
 
 class VercelBuilder {
 	readonly NTF_CACHE = {};
@@ -749,7 +770,7 @@ class VercelBuilder {
 		await writeJson(vcConfig, {
 			runtime,
 			handler: handler.replaceAll('\\', '/'),
-			launcherType: 'Nodejs',
+			launcherType: runtime.startsWith('bun') ? 'bun' : 'Nodejs',
 			maxDuration,
 			supportsResponseStreaming: true,
 		});
@@ -796,6 +817,35 @@ class VercelBuilder {
 }
 
 function getRuntime(process: NodeJS.Process, logger: AstroIntegrationLogger): Runtime {
+	const bunVersion = (process.versions as Record<string, string | undefined>).bun;
+	if (bunVersion) {
+		const [major, minor] = bunVersion.split('.');
+		const support =
+			SUPPORTED_BUN_VERSIONS[`${major}.${minor}.x`] ?? SUPPORTED_BUN_VERSIONS[`${major}.x`];
+		if (support === undefined) {
+			logger.warn(
+				`\n` +
+					`\tThe local Bun version (${bunVersion}) is not supported by Vercel Serverless Functions.\n` +
+					`\tYour project will use Bun 1.4.x as the runtime instead.\n` +
+					`\tConsider switching your local version to 1.4.x.\n`,
+			);
+			return 'bun1.4.x';
+		}
+		if (support.status === 'default' || support.status === 'available') {
+			return `bun${major}.${minor}.x`;
+		}
+		if (support.status === 'deprecated') {
+			logger.warn(
+				`\n` +
+					`\tYour project is being built for Bun ${bunVersion} as the runtime.\n` +
+					`\tThis version is deprecated by Vercel Serverless Functions.\n` +
+					`\tConsider upgrading your local version to 1.4.x.\n`,
+			);
+			return `bun${major}.${minor}.x`;
+		}
+		return 'bun1.4.x';
+	}
+
 	const version = process.version.slice(1); // 'v18.19.0' --> '18.19.0'
 	const major = version.split('.')[0]; // '18.19.0' --> '18'
 	const support = SUPPORTED_NODE_VERSIONS[major];
